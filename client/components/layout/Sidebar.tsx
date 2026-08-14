@@ -78,6 +78,14 @@ export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         </button>
       </div>
 
+      <nav className="space-y-1 px-3 pb-3">
+        {navItems.slice(0, 4).map((item) => {
+          const Icon = item.icon;
+          const active = item.path === "/" ? pathname === "/" : pathname.startsWith(item.path);
+          return <Link key={item.path} to={item.path} onClick={onNavigate} className={cn("flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-xs font-semibold", active ? "bg-sidebar-accent text-accent-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground")}><Icon className="h-4 w-4" />{item.label}</Link>;
+        })}
+      </nav>
+
       <div className="mx-3 rounded-2xl border border-border bg-card p-3 shadow-card">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -176,7 +184,7 @@ export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       <div className="mt-4 px-3">
         <div className="mb-2 flex items-center justify-between px-2">
           <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">待办事项</p>
-          <button className="text-[10px] font-semibold text-primary">查看全部</button>
+          <Link to="/todos" onClick={onNavigate} className="text-[10px] font-semibold text-primary">查看全部</Link>
         </div>
         <div className="space-y-1">
           {todosState.map((todo, index) => (
@@ -191,7 +199,6 @@ export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 
       <div className="sticky bottom-0 mt-auto border-t border-sidebar-border bg-white px-4 py-3">
         <div className="mb-2 flex items-center gap-2 rounded-xl bg-white p-2.5"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-400 to-fuchsia-400 text-[12px] font-bold text-white">房</div><div className="min-w-0 flex-1"><p className="truncate text-[11px] font-bold text-foreground">房琳茹</p><p className="truncate text-[10px] text-muted-foreground">高级视觉设计师</p></div><ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" /></div>
-        <nav className="space-y-0.5">{navItems.slice(0, 4).map((item) => { const Icon = item.icon; const active = item.path === "/" ? pathname === "/" : pathname.startsWith(item.path); return <Link key={item.path} to={item.path} onClick={onNavigate} className={cn("flex items-center gap-2 rounded-lg px-2.5 py-2 text-[11px] font-medium", active ? "bg-sidebar-accent text-accent-foreground" : "text-muted-foreground hover:bg-white hover:text-foreground")}><Icon className="h-3.5 w-3.5" />{item.label}</Link>; })}</nav>
       </div>
     </div>
   );
