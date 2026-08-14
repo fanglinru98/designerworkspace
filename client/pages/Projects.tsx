@@ -21,10 +21,10 @@ const tasks: Task[] = [
 ];
 
 const columns: { status: Status; icon: typeof CircleDashed; tone: string; dot: string }[] = [
-  { status: "未开始", icon: CircleDashed, tone: "bg-amber-50 border-amber-100", dot: "bg-amber-400" },
-  { status: "设计中", icon: Sparkles, tone: "bg-violet-50 border-violet-100", dot: "bg-violet-500" },
-  { status: "评审", icon: CalendarClock, tone: "bg-pink-50 border-pink-100", dot: "bg-pink-400" },
-  { status: "已完成", icon: CheckCircle2, tone: "bg-emerald-50 border-emerald-100", dot: "bg-emerald-500" },
+  { status: "未开始", icon: CircleDashed, tone: "bg-white border-border", dot: "bg-amber-400" },
+  { status: "设计中", icon: Sparkles, tone: "bg-white border-border", dot: "bg-violet-500" },
+  { status: "评审", icon: CalendarClock, tone: "bg-white border-border", dot: "bg-pink-400" },
+  { status: "已完成", icon: CheckCircle2, tone: "bg-white border-border", dot: "bg-emerald-500" },
 ];
 
 export default function Projects() {

@@ -73,7 +73,7 @@ export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   };
 
   return (
-    <div className="flex h-full w-full flex-col overflow-y-auto bg-sidebar text-sidebar-foreground thin-scrollbar">
+    <div className="flex h-full w-full flex-col overflow-y-auto bg-white text-sidebar-foreground thin-scrollbar">
       <div className="flex items-center gap-3 px-5 py-5">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary shadow-glow">
           <Sparkles className="h-[18px] w-[18px] text-primary-foreground" strokeWidth={2.5} />
@@ -82,7 +82,7 @@ export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
           <p className="text-[15px] font-bold leading-tight text-foreground">灵境</p>
           <p className="text-[11px] leading-tight text-muted-foreground">Designer OS</p>
         </div>
-        <button className="ml-auto rounded-lg p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground" aria-label="新增">
+        <button className="ml-auto rounded-lg p-1.5 text-muted-foreground hover:bg-white hover:text-foreground" aria-label="新增">
           <Plus className="h-4 w-4" />
         </button>
       </div>
@@ -110,11 +110,11 @@ export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
           </div>
         </div>
         <div className="mt-3 flex items-center justify-between">
-          <button onClick={() => setMonthOffset((value) => value - 1)} className="rounded-md p-1 text-muted-foreground hover:bg-secondary hover:text-foreground" aria-label="上个月">
+          <button onClick={() => setMonthOffset((value) => value - 1)} className="rounded-md p-1 text-muted-foreground hover:bg-white hover:text-foreground" aria-label="上个月">
             <ChevronLeft className="h-4 w-4" />
           </button>
           <span className="text-xs font-bold text-foreground">{monthLabel}</span>
-          <button onClick={() => setMonthOffset((value) => value + 1)} className="rounded-md p-1 text-muted-foreground hover:bg-secondary hover:text-foreground" aria-label="下个月">
+          <button onClick={() => setMonthOffset((value) => value + 1)} className="rounded-md p-1 text-muted-foreground hover:bg-white hover:text-foreground" aria-label="下个月">
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>
@@ -164,7 +164,7 @@ export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
               <button onClick={() => setOpenTodo(false)} className="text-[10px] text-muted-foreground hover:text-primary">收起</button>
             </div>
             <div className="mt-2 space-y-2">
-              <div className="flex items-start gap-2 rounded-lg bg-secondary/70 p-2">
+              <div className="flex items-start gap-2 rounded-lg bg-white p-2">
                 <Clock3 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
                 <div><p className="text-[11px] font-semibold text-foreground">首页视觉稿评审会</p><p className="text-[10px] text-muted-foreground">14:00 - 15:00 · 会议室 A</p></div>
               </div>
@@ -184,7 +184,7 @@ export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         </div>
         <div className="space-y-1">
           {todosState.map((todo, index) => (
-            <button key={todo.text} onClick={() => setTodosState((items) => items.map((item, itemIndex) => itemIndex === index ? { ...item, checked: !item.checked } : item))} className="flex w-full items-center gap-2.5 rounded-xl px-2 py-2 text-left hover:bg-secondary">
+            <button key={todo.text} onClick={() => setTodosState((items) => items.map((item, itemIndex) => itemIndex === index ? { ...item, checked: !item.checked } : item))} className="flex w-full items-center gap-2.5 rounded-xl px-2 py-2 text-left hover:bg-white">
               <span className={cn("flex h-4 w-4 shrink-0 items-center justify-center rounded-full border", todo.checked ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card")}>{todo.checked && <Check className="h-2.5 w-2.5" />}</span>
               <span className={cn("min-w-0 flex-1 truncate text-[11px] font-medium", todo.checked ? "text-muted-foreground line-through" : "text-foreground")}>{todo.text}</span>
               <span className="shrink-0 text-[9px] text-muted-foreground">{todo.time}</span>
@@ -206,8 +206,8 @@ export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       </div>
 
       <div className="border-t border-sidebar-border px-4 py-3">
-        <div className="mb-2 flex items-center gap-2 rounded-xl bg-secondary/60 p-2.5"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-400 to-fuchsia-400 text-[12px] font-bold text-white">房</div><div className="min-w-0 flex-1"><p className="truncate text-[11px] font-bold text-foreground">房琳茹</p><p className="truncate text-[10px] text-muted-foreground">高级视觉设计师</p></div><ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" /></div>
-        <nav className="space-y-0.5">{navItems.slice(0, 4).map((item) => { const Icon = item.icon; const active = item.path === "/" ? pathname === "/" : pathname.startsWith(item.path); return <Link key={item.path} to={item.path} onClick={onNavigate} className={cn("flex items-center gap-2 rounded-lg px-2.5 py-2 text-[11px] font-medium", active ? "bg-sidebar-accent text-accent-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground")}><Icon className="h-3.5 w-3.5" />{item.label}</Link>; })}</nav>
+        <div className="mb-2 flex items-center gap-2 rounded-xl bg-white p-2.5"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-400 to-fuchsia-400 text-[12px] font-bold text-white">房</div><div className="min-w-0 flex-1"><p className="truncate text-[11px] font-bold text-foreground">房琳茹</p><p className="truncate text-[10px] text-muted-foreground">高级视觉设计师</p></div><ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" /></div>
+        <nav className="space-y-0.5">{navItems.slice(0, 4).map((item) => { const Icon = item.icon; const active = item.path === "/" ? pathname === "/" : pathname.startsWith(item.path); return <Link key={item.path} to={item.path} onClick={onNavigate} className={cn("flex items-center gap-2 rounded-lg px-2.5 py-2 text-[11px] font-medium", active ? "bg-sidebar-accent text-accent-foreground" : "text-muted-foreground hover:bg-white hover:text-foreground")}><Icon className="h-3.5 w-3.5" />{item.label}</Link>; })}</nav>
       </div>
     </div>
   );
