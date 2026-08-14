@@ -13,8 +13,8 @@ export default function AppLayout({
 }) {
   return (
     <div className="flex min-h-screen bg-background text-foreground">
-      <aside className="hidden w-64 shrink-0 border-r border-sidebar-border lg:block">
-        <div className="fixed h-screen w-64">
+      <aside className="hidden w-[300px] shrink-0 border-r border-sidebar-border lg:block">
+        <div className="fixed h-screen w-[300px]">
           <Sidebar />
         </div>
       </aside>
