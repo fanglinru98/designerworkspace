@@ -11,20 +11,20 @@ type Status = "未开始" | "设计中" | "评审" | "已完成";
 interface Task { id: string; title: string; project: string; date: string; tag: string; status: Status; owner: string; color: string; }
 
 const tasks: Task[] = [
-  { id: "DSK-022", title: "移动端适配与组件切图", project: "品牌重塑 2.0", date: "05-25", tag: "视觉", status: "未开始", owner: "林", color: "bg-amber-100 text-amber-700" },
-  { id: "DSK-023", title: "图标系统统一规范", project: "设计系统规范", date: "05-26", tag: "组件", status: "未开始", owner: "陈", color: "bg-sky-100 text-sky-700" },
-  { id: "DSK-015", title: "品牌色板与情绪板整理", project: "品牌重塑 2.0", date: "05-22", tag: "灵感", status: "设计中", owner: "房", color: "bg-violet-100 text-violet-700" },
-  { id: "DSK-021", title: "首页视觉稿 v3 精修", project: "品牌重塑 2.0", date: "05-24", tag: "高优先级", status: "设计中", owner: "房", color: "bg-rose-100 text-rose-700" },
-  { id: "DSK-030", title: "设计评审会 · 核心页面", project: "品牌重塑 2.0", date: "05-28", tag: "评审", status: "评审", owner: "周", color: "bg-pink-100 text-pink-700" },
-  { id: "DSK-014", title: "竞品视觉趋势调研", project: "品牌重塑 2.0", date: "05-20", tag: "调研", status: "已完成", owner: "陈", color: "bg-emerald-100 text-emerald-700" },
-  { id: "DSK-031", title: "标注文档与切图交付", project: "品牌重塑 2.0", date: "05-30", tag: "交付", status: "已完成", owner: "房", color: "bg-teal-100 text-teal-700" },
+  { id: "DSK-022", title: "移动端适配与组件切图", project: "品牌重塑 2.0", date: "05-25", tag: "视觉", status: "未开始", owner: "林", color: "bg-amber-950/50 text-amber-300" },
+  { id: "DSK-023", title: "图标系统统一规范", project: "设计系统规范", date: "05-26", tag: "组件", status: "未开始", owner: "陈", color: "bg-sky-950/50 text-sky-300" },
+  { id: "DSK-015", title: "品牌色板与情绪板整理", project: "品牌重塑 2.0", date: "05-22", tag: "灵感", status: "设计中", owner: "房", color: "bg-violet-950/50 text-violet-300" },
+  { id: "DSK-021", title: "首页视觉稿 v3 精修", project: "品牌重塑 2.0", date: "05-24", tag: "高优先级", status: "设计中", owner: "房", color: "bg-rose-950/50 text-rose-300" },
+  { id: "DSK-030", title: "设计评审会 · 核心页面", project: "品牌重塑 2.0", date: "05-28", tag: "评审", status: "评审", owner: "周", color: "bg-pink-950/50 text-pink-300" },
+  { id: "DSK-014", title: "竞品视觉趋势调研", project: "品牌重塑 2.0", date: "05-20", tag: "调研", status: "已完成", owner: "陈", color: "bg-emerald-950/50 text-emerald-300" },
+  { id: "DSK-031", title: "标注文档与切图交付", project: "品牌重塑 2.0", date: "05-30", tag: "交付", status: "已完成", owner: "房", color: "bg-teal-950/50 text-teal-300" },
 ];
 
 const columns: { status: Status; icon: typeof CircleDashed; tone: string; dot: string }[] = [
-  { status: "未开始", icon: CircleDashed, tone: "bg-amber-50 border-amber-100", dot: "bg-amber-400" },
-  { status: "设计中", icon: Sparkles, tone: "bg-violet-50 border-violet-100", dot: "bg-violet-500" },
-  { status: "评审", icon: CalendarClock, tone: "bg-pink-50 border-pink-100", dot: "bg-pink-400" },
-  { status: "已完成", icon: CheckCircle2, tone: "bg-emerald-50 border-emerald-100", dot: "bg-emerald-500" },
+  { status: "未开始", icon: CircleDashed, tone: "bg-amber-950/25 border-amber-900/60", dot: "bg-amber-400" },
+  { status: "设计中", icon: Sparkles, tone: "bg-violet-950/25 border-violet-900/60", dot: "bg-violet-500" },
+  { status: "评审", icon: CalendarClock, tone: "bg-pink-950/25 border-pink-900/60", dot: "bg-pink-400" },
+  { status: "已完成", icon: CheckCircle2, tone: "bg-emerald-950/25 border-emerald-900/60", dot: "bg-emerald-500" },
 ];
 
 export default function Projects() {
@@ -41,7 +41,7 @@ export default function Projects() {
           {columns.map((column) => {
             const Icon = column.icon;
             const items = filtered.filter((task) => task.status === column.status);
-            return <section key={column.status} className={cn("min-h-[430px] rounded-2xl border p-3", column.tone)}><div className="flex items-center gap-2 px-1 pb-3"><Icon className="h-4 w-4 text-foreground/60" /><h2 className="text-sm font-bold text-foreground">{column.status}</h2><span className="text-xs text-muted-foreground">{items.length}</span><button className="ml-auto rounded-md p-1 text-muted-foreground hover:bg-white/70"><MoreHorizontal className="h-4 w-4" /></button></div><div className="space-y-3">{items.map((task) => <article key={task.id} className="rounded-xl border border-white/80 bg-card p-3 shadow-sm transition-shadow hover:shadow-md"><div className="flex items-start justify-between gap-2"><Badge className={cn("border-none px-2 py-0.5 text-[10px]", task.color)}>{task.tag}</Badge><span className="text-[10px] text-muted-foreground">{task.id}</span></div><h3 className="mt-2 text-xs font-bold leading-5 text-foreground">{task.title}</h3><p className="mt-1 text-[10px] text-muted-foreground">{task.project}</p><div className="mt-3 flex items-center justify-between border-t border-border/70 pt-2.5"><span className="flex items-center gap-1 text-[10px] text-muted-foreground"><CalendarClock className="h-3 w-3" />{task.date}</span><Avatar className="h-6 w-6"><AvatarFallback className="bg-primary/10 text-[10px] font-bold text-primary">{task.owner}</AvatarFallback></Avatar></div></article>)}</div><button className="mt-3 flex w-full items-center justify-center gap-1 rounded-lg py-2 text-[11px] font-semibold text-muted-foreground hover:bg-white/70 hover:text-foreground"><Plus className="h-3.5 w-3.5" />添加任务</button></section>;
+            return <section key={column.status} className={cn("min-h-[430px] rounded-2xl border p-3", column.tone)}><div className="flex items-center gap-2 px-1 pb-3"><Icon className="h-4 w-4 text-foreground/60" /><h2 className="text-sm font-bold text-foreground">{column.status}</h2><span className="text-xs text-muted-foreground">{items.length}</span><button className="ml-auto rounded-md p-1 text-muted-foreground hover:bg-white/5"><MoreHorizontal className="h-4 w-4" /></button></div><div className="space-y-3">{items.map((task) => <article key={task.id} className="rounded-xl border border-white/10 bg-card p-3 shadow-sm transition-shadow hover:shadow-md"><div className="flex items-start justify-between gap-2"><Badge className={cn("border-none px-2 py-0.5 text-[10px]", task.color)}>{task.tag}</Badge><span className="text-[10px] text-muted-foreground">{task.id}</span></div><h3 className="mt-2 text-xs font-bold leading-5 text-foreground">{task.title}</h3><p className="mt-1 text-[10px] text-muted-foreground">{task.project}</p><div className="mt-3 flex items-center justify-between border-t border-border/70 pt-2.5"><span className="flex items-center gap-1 text-[10px] text-muted-foreground"><CalendarClock className="h-3 w-3" />{task.date}</span><Avatar className="h-6 w-6"><AvatarFallback className="bg-primary/10 text-[10px] font-bold text-primary">{task.owner}</AvatarFallback></Avatar></div></article>)}</div><button className="mt-3 flex w-full items-center justify-center gap-1 rounded-lg py-2 text-[11px] font-semibold text-muted-foreground hover:bg-white/5 hover:text-foreground"><Plus className="h-3.5 w-3.5" />添加任务</button></section>;
           })}
         </div>
       </div>

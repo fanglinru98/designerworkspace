@@ -22,10 +22,10 @@ import { cn } from "@/lib/utils";
 import { navItems } from "@/lib/nav";
 
 const quickLinks: { label: string; url: string; icon: LucideIcon; color: string }[] = [
-  { label: "Figma", url: "https://www.figma.com", icon: Shapes, color: "bg-violet-100 text-violet-600" },
-  { label: "Notion", url: "https://www.notion.so", icon: ListTodo, color: "bg-slate-100 text-slate-700" },
-  { label: "Dribbble", url: "https://dribbble.com", icon: Globe2, color: "bg-pink-100 text-pink-500" },
-  { label: "Behance", url: "https://www.behance.net", icon: ArrowUpRight, color: "bg-blue-100 text-blue-600" },
+  { label: "Figma", url: "https://www.figma.com", icon: Shapes, color: "bg-violet-950/50 text-violet-300" },
+  { label: "Notion", url: "https://www.notion.so", icon: ListTodo, color: "bg-slate-800 text-slate-300" },
+  { label: "Dribbble", url: "https://dribbble.com", icon: Globe2, color: "bg-pink-950/50 text-pink-300" },
+  { label: "Behance", url: "https://www.behance.net", icon: ArrowUpRight, color: "bg-blue-950/50 text-blue-300" },
 ];
 
 const projects = [
