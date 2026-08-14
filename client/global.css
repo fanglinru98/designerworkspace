@@ -15,54 +15,54 @@
    * Accent is a vivid emerald/spring green used sparingly for focus + status.
   */
   :root {
-    --background: 240 8% 5%;
-    --foreground: 0 0% 95%;
+    --background: 232 38% 97%;
+    --foreground: 232 24% 18%;
 
-    --card: 240 7% 9%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 232 24% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 95%;
+    --popover-foreground: 232 24% 18%;
 
-    --primary: 145 92% 48%;
-    --primary-foreground: 240 10% 6%;
+    --primary: 267 66% 67%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 6% 15%;
-    --secondary-foreground: 0 0% 90%;
+    --secondary: 235 32% 94%;
+    --secondary-foreground: 232 24% 24%;
 
-    --muted: 240 6% 14%;
-    --muted-foreground: 240 5% 62%;
+    --muted: 232 26% 94%;
+    --muted-foreground: 232 12% 51%;
 
-    --accent: 240 6% 18%;
-    --accent-foreground: 0 0% 96%;
+    --accent: 330 72% 94%;
+    --accent-foreground: 326 55% 42%;
 
     --destructive: 4 78% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --warning: 38 90% 56%;
-    --warning-foreground: 240 10% 6%;
+    --warning-foreground: 232 24% 18%;
 
-    --border: 240 6% 19%;
-    --input: 240 6% 17%;
+    --border: 232 28% 89%;
+    --input: 232 28% 89%;
     --ring: 145 92% 48%;
 
     --radius: 1rem;
 
-    --sidebar-background: 240 9% 4%;
+    --sidebar-background: 233 42% 98%;
 
-    --sidebar-foreground: 240 5% 80%;
+    --sidebar-foreground: 232 14% 36%;
 
-    --sidebar-primary: 145 92% 48%;
+    --sidebar-primary: 267 66% 67%;
 
     --sidebar-primary-foreground: 0 0% 100%;
 
-    --sidebar-accent: 240 6% 12%;
+    --sidebar-accent: 267 70% 94%;
 
-    --sidebar-accent-foreground: 0 0% 96%;
+    --sidebar-accent-foreground: 267 55% 42%;
 
-    --sidebar-border: 240 6% 14%;
+    --sidebar-border: 232 28% 91%;
 
-    --sidebar-ring: 145 92% 48%;
+    --sidebar-ring: 267 66% 67%;
   }
 }
 
@@ -121,7 +121,7 @@
       ),
       radial-gradient(
         40% 40% at 100% 0%,
-        hsl(145 85% 45% / 0.08) 0%,
+        hsl(267 75% 72% / 0.12) 0%,
         transparent 60%
       );
   }

@@ -68,8 +68,8 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        glow: "0 0 0 1px hsl(var(--primary) / 0.25), 0 8px 30px -8px hsl(var(--primary) / 0.45)",
-        card: "0 1px 0 0 hsl(0 0% 100% / 0.03) inset, 0 10px 30px -12px hsl(0 0% 0% / 0.6)",
+        glow: "0 0 0 1px hsl(var(--primary) / 0.18), 0 10px 28px -10px hsl(267 55% 60% / 0.4)",
+        card: "0 1px 0 0 hsl(0 0% 100% / 0.8) inset, 0 12px 28px -16px hsl(235 35% 45% / 0.28)",
       },
       keyframes: {
         "accordion-down": {
