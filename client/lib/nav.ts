@@ -1,7 +1,6 @@
 import {
   LayoutDashboard,
   FolderKanban,
-  Palette,
   Lightbulb,
   Users,
   BarChart3,
@@ -19,7 +18,6 @@ export interface NavItem {
 export const navItems: NavItem[] = [
   { label: "工作台", path: "/", icon: LayoutDashboard },
   { label: "项目总览", path: "/projects", icon: FolderKanban },
-  { label: "设计资产", path: "/assets", icon: Palette },
   { label: "灵感库", path: "/inspiration", icon: Lightbulb },
   { label: "团队协作", path: "/collaboration", icon: Users },
   { label: "数据洞察", path: "/analytics", icon: BarChart3 },

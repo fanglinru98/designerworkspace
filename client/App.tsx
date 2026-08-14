@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Projects from "./pages/Projects";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
@@ -20,14 +21,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route
-            path="/projects"
-            element={<Placeholder title="项目总览" />}
-          />
-          <Route
-            path="/assets"
-            element={<Placeholder title="设计资产" />}
-          />
+          <Route path="/projects" element={<Projects />} />
           <Route
             path="/inspiration"
             element={<Placeholder title="灵感库" />}
