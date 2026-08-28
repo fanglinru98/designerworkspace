@@ -1,5 +1,5 @@
 /* 灵境 Designer OS — Service Worker（离线缓存，PWA 安装所需） */
-const CACHE = "lingjing-v1";
+const CACHE = "lingjing-v2";
 const CORE = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (e) => {
