@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="灵境 Designer OS">
+  <title>灵境 Designer OS</title>
+  <!-- 底：主色紫 #A673E3（= client/global.css --primary 267 66% 67%） -->
+  <rect width="512" height="512" rx="112" fill="#A673E3"/>
+  <!-- 圆角方环：辅色粉 #FBE5F0（= --accent 330 72% 94%）。
+       SVG 描边居中，故 rect 内缩 stroke/2 = 16，rx 取内外圆角均值 68 -->
+  <rect x="112" y="112" width="288" height="288" rx="68" fill="none" stroke="#FBE5F0" stroke-width="32"/>
+  <!-- 中心折角方：右下角 45° 折角，呼应 Fusion Starter 原 favicon 的斜折几何 -->
+  <path d="M202 176 H310 A26 26 0 0 1 336 202 V272 L272 336 H202 A26 26 0 0 1 176 310 V202 A26 26 0 0 1 202 176 Z" fill="#FBE5F0"/>
+</svg>
