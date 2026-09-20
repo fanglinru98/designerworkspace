@@ -3,108 +3,113 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>复盘台 · 真数据只读（首页/问题库/常用动作）</title>
-<!-- E-20260920-02 · 基于 20260919-复盘系统-V1定稿三页.html 定稿壳转真数据只读台 -->
+<title>复盘台 · 灵境风 v2</title>
+<!--
+  E-20260920-04 · 按 20260920-复盘台-灵境风-v2.html 定稿整页换皮；数据层照 E-02 逻辑零改动（fetch 三 JSON + .json.js 兜底 + 空态 + 两态 LS maoor-review-actions）
+  老板裁定：①全 emoji 撤（✓✕》①等单色符号保留）②首 tab=「报告汇总」③统计=稿内四枚单色 SVG ④数据以 PM 汇编 JSON 为准
+-->
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{background:#dff0f6;font-family:"Trebuchet MS","Microsoft YaHei",sans-serif;color:#24262b;
-    display:flex;flex-direction:column;align-items:center;padding:14px 12px 40px}
-  .shell{width:100%;background:#17181b;border-radius:28px;padding:10px;box-shadow:0 24px 60px rgba(15,20,30,.18)}
-  .topbar{display:flex;align-items:center;gap:14px;padding:8px 10px 12px}
-  .brand{color:#fff;font-weight:800;font-size:30px;letter-spacing:.3px}
-  .tnav{display:flex;align-items:center;gap:4px;margin:0 auto;background:#17181b}
-  .tnav span{color:#9aa0a8;font-size:21px;font-weight:600;padding:6px 12px;border-radius:99px;cursor:pointer;user-select:none}
-  .tnav .on{background:#fff;color:#17181b}
-  .user .av{width:26px;height:26px;border-radius:99px;background:#e8d9a8;color:#17181b;font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center}
-  .user b{color:#fff;font-size:22px}
-  .user small{color:#9aa0a8;font-size:18px;display:block}
-  .search{background:#fff;border-radius:99px;padding:7px 14px;font-size:21px;color:#9aa0a8;width:190px;border:0;outline:none;font-family:inherit}
-  .cream{position:relative;background:#f6f4ef;border-radius:22px;padding:18px 20px;display:flex;gap:16px;overflow:hidden;height:660px} /* 老板 09-20：三页外框同尺寸定高，卡流多少不拉底部长度 */
-  .maincol{flex:1;min-width:0;display:flex;flex-direction:column;overflow-y:auto;padding-right:4px} /* 卡多=列内滚动 */
-  .ptitle{font-size:38px;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:12px}
-  .ptitle small{font-size:20px;font-weight:400;color:#8d9096}
-  .card{background:#fff;border:1px solid #ece9e3;border-radius:16px;padding:14px 16px;box-shadow:0 6px 16px rgba(15,20,30,.045);position:relative} /* relative 锚：.tri 两态钮贴在每张卡右下（不复位到整页右下） */
-  .card h3{font-size:28px;font-weight:800;line-height:1.35}
-  .card p{font-size:21px;color:#8d9096;line-height:1.6;margin-top:4px}
-  .pill{display:inline-block;border-radius:99px;padding:3px 10px;font-size:19px;font-weight:700}
-  .p-mint{background:#e4f2e0;color:#2f7a3d}.p-lav{background:#f0e3f6;color:#7b46a8}
-  .p-but{background:#fcf0cf;color:#8a6d1f}.p-rose{background:#fbe0de;color:#a33a32}
-  .p-sky{background:#e1eff6;color:#2f6a89}.p-gray{background:#f0efec;color:#8d9096}
-  .avatarline{display:flex;margin-top:10px}
-  .avatarline i{width:20px;height:20px;border-radius:99px;border:2px solid #fff;margin-left:-6px;
-    display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;font-style:normal}
-  .avatarline i:first-child{margin-left:0}
-  .statcol{display:flex;gap:10px;margin-bottom:12px}
-  .stat{flex:1;border-radius:14px;padding:10px 12px}
-  .stat b{font-size:40px;font-weight:800;display:block}
-  .stat small{font-size:18px;font-weight:700;letter-spacing:.4px}
-  .eventcard{border-radius:14px;padding:11px 13px;margin-bottom:10px}
-  .eventcard .eh{display:flex;align-items:center;gap:6px;font-size:21px;font-weight:800}
-  .eventcard .eh small{margin-left:auto;font-weight:700;color:#5f6b75;font-size:18px}
-  .eventcard p{font-size:20px;line-height:1.6;margin-top:6px;color:#4b4e55}
-  .timepill{display:inline-flex;gap:4px;background:#fff;border-radius:99px;padding:3px 10px;font-size:18px;font-weight:700;color:#3c3f45;margin-top:8px}
-  .tri{display:flex;gap:5px;position:absolute;right:14px;bottom:12px}
-  .tri span{border:1px solid #e4e1da;border-radius:99px;padding:2.5px 9px;font-size:18px;font-weight:700;color:#5c6068;background:#fff;cursor:pointer}
-  .tri span.on{background:#17181b;color:#fff;border-color:#17181b}
-  .tri span.lock{opacity:.45;cursor:default}
-  .chipline{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-  .chipline .c{border-radius:99px;padding:4px 12px;font-size:20px;font-weight:700;background:#fff;color:#5c6068;border:1px solid #e6e2da;cursor:pointer;user-select:none}
-  .chipline .on{background:#17181b;color:#fff;border-color:#17181b}
-  .chipline .warn{color:#a33a32;border-color:#f0d3d0}
-  .gatebar{display:flex;align-items:center;gap:10px;background:#17181b;border-radius:14px;padding:10px 16px;
-    color:#fff;margin-bottom:14px;font-size:21px;font-weight:600}
-  .gatebar b{color:#e8d9a8;font-weight:800}
-  .gatebar i{width:22px;height:22px;border-radius:99px;background:#e8d9a8;color:#17181b;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:22px;flex:0 0 22px}
-  .empty{padding:34px 20px;text-align:center;color:#8d9096;font-size:22px;line-height:1.9}
-  .empty b{color:#24262b}
-  .page{display:none}.page.on{display:flex;flex-direction:column}
-  .sidecol{overflow-y:auto;padding-top:2px} /* 老板 09-20 同款定高后：右栏超长也列内滚，三页外框一致 */
-  .cap{font-size:22px;color:#5f6b75;text-align:center;margin-top:10px}
+  body{background:#f3f4fa;font-family:"Microsoft YaHei","微软雅黑",sans-serif;letter-spacing:.02em;color:#27273c;
+    max-width:1100px;margin:0 auto;padding:26px 22px 60px}
+  .tabrow{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+  .tab{height:36px;padding:0 18px;border-radius:99px;background:#fff;border:1px solid #e4e5f1;
+    box-shadow:0 2px 10px rgba(35,37,74,.06);color:#6e7091;font-size:12px;font-weight:600;
+    display:flex;align-items:center;gap:6px;cursor:pointer;transition:all .15s}
+  .tab:hover{color:#8b5cf6;border-color:#d8ccf7}
+  .tab.on{background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;font-weight:600;
+    border-color:rgba(255,255,255,.35);box-shadow:0 8px 22px rgba(139,92,246,.28)}
+  .tab i{width:7px;height:7px;border-radius:99px;background:#6e7091;flex:0 0 7px}
+  .tab.on i{background:#fff}
+  .gcard{background:#fff;border:1px solid #e4e5f1;border-radius:16px;box-shadow:0 2px 10px rgba(35,37,74,.06)}
+  main section{display:flex;gap:16px;align-items:flex-start}
+  main section[hidden]{display:none}
+  .mid{flex:1;min-width:0;display:flex;flex-direction:column}
+  .side{width:250px;flex:0 0 250px;display:flex;flex-direction:column;gap:10px}
+  .h1line{font-size:14px;font-weight:700;display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
+  .h1line small{font-size:12px;font-weight:400;color:#6e7091}
+  .statcol{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+  .stat{background:#fff;border:1px solid #e4e5f1;border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(35,37,74,.06)}
+  .stat .ic{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .stat .num{font-size:24px;font-weight:800;margin-top:12px;color:#27273c}
+  .stat .lb{font-size:12px;font-weight:600;color:#6e7091;margin-top:2px}
+  .stat .note{font-size:10px;color:#6e7091;float:right}
+  .task{position:relative;background:#fff;border:1px solid #e4e5f1;border-radius:12px;padding:12px;box-shadow:0 2px 8px rgba(35,37,74,.05)}
+  .task+.task,.task+.pitflow-gap{margin-top:10px}
+  .task h3{font-size:14px;font-weight:700;color:#27273c}
+  .task p{font-size:10px;color:#6e7091;margin-top:4px;line-height:1.6}
+  .badge{display:inline-block;border-radius:99px;padding:2px 8px;font-size:10px;font-weight:600}
+  .rowline{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+  .meta{font-size:10px;color:#6e7091;display:flex;align-items:center;gap:5px}
+  .dot{width:8px;height:8px;border-radius:99px;flex:0 0 8px}
+  .acts{position:absolute;right:12px;bottom:12px;display:flex;gap:5px}
+  .ab{width:24px;height:24px;border-radius:99px;border:1px solid #e4e5f1;background:#fff;color:#6e7091;
+    font-size:10px;display:flex;align-items:center;justify-content:center}
+  .ab.dark{background:linear-gradient(135deg,#a78bfa,#8b5cf6);border-color:transparent;color:#fff}
+  .mini{border-radius:12px;padding:11px 13px;position:relative}
+  .mini .eh{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700}
+  .mini .eh small{margin-left:auto;font-size:10px;font-weight:400;color:#6e7091}
+  .mini p{font-size:10px;line-height:1.65;margin-top:5px;color:#4b4d66}
+  .tp{display:inline-flex;align-items:center;background:#fff;border:1px solid #e4e5f1;border-radius:99px;
+    padding:3px 10px;font-size:10px;font-weight:600;color:#4b4d66;margin-top:7px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .chips span{background:#fff;border:1px solid #e4e5f1;border-radius:99px;padding:6px 14px;font-size:12px;
+    font-weight:600;color:#6e7091;cursor:pointer;box-shadow:0 2px 8px rgba(35,37,74,.04);user-select:none}
+  .chips span.on{background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border-color:transparent}
+  .chips span.warn{color:#e0485c;border-color:#f5d4d9}
+  .gate{background:#fff;border:1px solid #e4e5f1;border-radius:16px;padding:12px 16px;display:flex;align-items:center;
+    gap:10px;margin-bottom:14px;font-size:12px;color:#27273c;box-shadow:0 2px 10px rgba(35,37,74,.06)}
+  .gate b{color:#7c4fe0}
+  .gate i{width:28px;height:28px;border-radius:99px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);
+    color:#fff;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:12px;font-weight:700;flex:0 0 28px}
+  .tri{display:flex;gap:6px;position:absolute;right:12px;bottom:12px}
+  .tri span{border:1px solid #e4e5f1;border-radius:99px;padding:3px 10px;font-size:10px;font-weight:600;
+    color:#6e7091;background:#fff;cursor:pointer;user-select:none}
+  .tri span.on{background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border-color:transparent}
+  .tri span.off{opacity:.4;cursor:default}
+  .pit{position:relative;background:#fff;border:1px solid #e4e5f1;border-radius:12px;padding:12px;box-shadow:0 2px 8px rgba(35,37,74,.05)}
+  .pit h3{font-size:14px;font-weight:700;padding-right:70px}
+  .pit p{font-size:10px;color:#6e7091;margin-top:4px;line-height:1.6}
+  .pit .badge.pos{position:absolute;right:12px;top:12px}
+  .pit .pills{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;padding-right:0}
+  .empty{padding:30px 20px;text-align:center;color:#6e7091;font-size:12px;line-height:1.9;background:#fff;
+    border:1px dashed #e4e5f1;border-radius:12px}
+  .empty b{color:#27273c}
+  #pitGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media (max-width:960px){main section{flex-direction:column}.side{width:100%;flex:1 1 auto}}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-  /* ── 老板 09-20：黑壳满版（无露底）+ 全站字号 ×2 ── */
-  body{background:#17181b;padding:0;min-height:100vh}
-  .shell{width:100%;min-height:100vh;border-radius:0;box-shadow:none}
-  .cream{height:calc(100vh - 96px)} /* 覆盖 660 定高：三页仍同框，竖向也铺满 */
 </style>
 </head>
 <body>
-<div class="shell">
-  <div class="topbar">
-    <span class="brand">复盘台</span>
-    <div class="tnav">
-      <span class="on" data-page="home">首页</span>
-      <span data-page="pits">问题库</span>
-      <span data-page="acts">常用动作</span>
-    </div>
-    <input class="search" id="qbox" placeholder="🔍 搜索…">
-    <span class="user"><span class="av">统</span><b>老板<small>owner@worktime</small></b></span>
+<nav class="tabrow">
+  <span class="tab on" data-p="p1"><i></i>报告汇总</span>
+  <span class="tab" data-p="p2"><i></i>问题库</span>
+  <span class="tab" data-p="p3"><i></i>常用动作</span>
+</nav>
+<main>
+<section id="p1">
+  <div class="mid"><div class="h1line">报告大厅 <small id="repSub"></small></div>
+    <div class="statcol" id="repStats" style="display:none"></div>
+    <div id="repFlow"></div>
   </div>
-  <div class="cream">
-    <div class="maincol">
-      <div class="page on" id="page-home">
-        <div class="ptitle">报告大厅 <small id="repSub"></small></div>
-        <div class="statcol" id="repStats"></div>
-        <div id="repFlow" style="display:flex;flex-direction:column;gap:11px"></div>
-      </div>
-      <div class="page" id="page-pits">
-        <div class="ptitle">坑案例库 <small id="pitSub"></small></div>
-        <div class="chipline" id="pitChips"></div>
-        <div id="pitFlow" style="display:flex;flex-direction:column;gap:11px;overflow:auto"></div>
-      </div>
-      <div class="page" id="page-acts">
-        <div class="ptitle">动作盘点 <small id="actSub"></small></div>
-        <div class="gatebar"><i>✓</i>记模板门槛：<b>同一件事重复 ≥3 次，且至少 5 个固定步骤</b> —— 达标才记模板，不达标保持现状</div>
-        <div id="actFlow" style="display:flex;flex-direction:column;gap:11px"></div>
-      </div>
-    </div>
-    <div class="sidecol" style="width:250px;flex:0 0 250px" id="sidehome"></div>
-    <div class="sidecol" style="width:250px;flex:0 0 250px;display:none" id="sidepits"></div>
-    <div class="sidecol" style="width:250px;flex:0 0 250px;display:none" id="sideacts"></div>
+  <div class="side" id="sideHome"></div>
+</section>
+<section id="p2" hidden>
+  <div class="mid"><div class="h1line">坑案例库 <small id="pitSub"></small></div>
+    <div class="chips" id="pitChips"></div>
+    <div id="pitGrid"></div>
   </div>
-</div>
-<div class="cap">E-20260920-02 · 数据只读台 · PM 汇编 JSON（同目录 reports/pitfalls/actions.json）· 零编辑零后端</div>
+  <div class="side" id="sidePits"></div>
+</section>
+<section id="p3" hidden>
+  <div class="mid"><div class="h1line">动作盘点 <small id="actSub"></small></div>
+    <div class="gate"><i>✓</i>记模板门槛：<b>同一件事重复 ≥3 次，且至少 5 个固定步骤</b> —— 达标才记模板，不达标保持现状</div>
+    <div id="actFlow"></div>
+  </div>
+  <div class="side" id="sideActs"></div>
+</section>
 <script>
-/* E-20260920-02 数据通路脚本：fetch 主通道 → 降级 .json.js → 空态（不白屏） */
+/* E-20260920-04 数据层：照 E-02 逻辑零改动（fetch 主通道 → .json.js 兜底 → 空态），LS key 不变 */
 var DATA={reports:[],pits:[],acts:[]};
 function escH(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function loadJS(name){return new Promise(function(res){
@@ -124,115 +129,128 @@ Promise.all([loadJSON("reports"),loadJSON("pitfalls"),loadJSON("actions")]).then
   DATA.pits=Array.isArray(v[1])?v[1]:[];
   DATA.acts=Array.isArray(v[2])?v[2]:[];
   renderHome();renderPits();renderActs();
-}).catch(function(){renderEmpty()});
-var pages=["home","pits","acts"],sidesById={home:"sidehome",pits:"sidepits",acts:"sideacts"};
-window.addEventListener("DOMContentLoaded",function(){
-  document.querySelectorAll(".tnav span").forEach(function(t){
-    t.addEventListener("click",function(){
-      document.querySelectorAll(".tnav span").forEach(function(x){x.classList.toggle("on",x===t)});
-      pages.forEach(function(p){document.getElementById("page-"+p).classList.toggle("on",p===t.getAttribute("data-page"));
-        document.getElementById(sidesById[p]).style.display=((p===t.getAttribute("data-page"))?"block":"none")});
-    });
-  });
-  document.getElementById("qbox").addEventListener("input",function(){renderHome();renderPits()});
 });
-var pillOfStatus={"已完成":"p-mint","进行中":"p-lav","设计中":"p-lav","待判定":"p-gray","待验证":"p-but","惯犯":"p-rose","已固化":"p-mint","建议模板":"p-but","信息":"p-sky"};
-var AV={统:"#e5b83c",设:"#9a6bd1",工:"#4fae7c"};
-function emptyBox(msg){return '<div class="empty">'+msg+'</div>'}
-
+document.querySelectorAll(".tab").forEach(function(t){
+  t.addEventListener("click",function(){
+    document.querySelectorAll(".tab").forEach(function(x){x.classList.toggle("on",x===t)});
+    document.querySelectorAll("main section").forEach(function(s){s.hidden=(s.id!==t.getAttribute("data-p"))});
+  });
+});
+if(/^#p[12]$/.test(location.hash)||/^#p3$/.test(location.hash)){
+  var _t=document.querySelector('.tab[data-p="'+location.hash.slice(1)+'"]');
+  if(_t)_t.click();
+}
+var BK={"已完成":{b:"#e6f4e9",t:"#2f7a3d"},"进行中":{b:"#f1e8fb",t:"#7c4fe0"},"已归档":{b:"#e6f4e9",t:"#2f7a3d"},
+  "待验证":{b:"#fdf2e3",t:"#b06d16"},"待判定":{b:"#f4f4f9",t:"#6e7091"},"惯犯":{b:"#fdeef0",t:"#e0485c"},
+  "已固化":{b:"#e6f4e9",t:"#2f7a3d"},"建议模板":{b:"#fdf2e3",t:"#b06d16"}};
+function bkStyle(s){var c=BK[s]||{b:"#f4f4f9",t:"#6e7091"};return "background:"+c.b+";color:"+c.t}
+var ODOT={"统":"#e5b83c","设":"#9a6bd1","工":"#4fae7c"};
+function svgOf(k){
+  var map={arc:["#e6f4e9","#2f7a3d"],pen:["#f1e8fb","#7c4fe0"],tri:["#fdf2e2","#b06d16"],box:["#eef1fb","#3b62a8"]};
+  var c=map[k];
+  var inner={arc:'<path d="M8 2.5a5.5 5.5 0 1 1-4.9 8" fill="none" stroke="'+c[1]+'" stroke-width="1.8" stroke-linecap="round"/>',
+    pen:'<path d="M3 13l1.2-3.2L11.5 2.7l1.8 1.8-7.3 7.3z" fill="none" stroke="'+c[1]+'" stroke-width="1.6" stroke-linejoin="round"/>',
+    tri:'<path d="M8 3l6 10H2z" fill="none" stroke="'+c[1]+'" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 7v3" stroke="'+c[1]+'" stroke-width="1.6" stroke-linecap="round"/>',
+    box:'<rect x="3.5" y="5.5" width="9" height="7.5" rx="1.5" fill="none" stroke="'+c[1]+'" stroke-width="1.6"/><path d="M5.5 5.2V3.5h5v1.7" fill="none" stroke="'+c[1]+'" stroke-width="1.6"/>'}[k];
+  return '<span class="ic" style="background:'+c[0]+'"><svg viewBox="0 0 16 16" width="15" height="15" fill="none">'+inner+"</svg></span>";
+}
+function statsHTML(){
+  var tdN=DATA.reports.filter(function(r){return r.更大分组==="今天"}).length;
+  var prog=DATA.reports.filter(function(r){return r.状态==="进行中"}).length;
+  var pitWait=DATA.pits.filter(function(p){return p.状态标签==="待验证"}).length;
+  return '<div class="stat">'+svgOf("arc")+'<span class="note">'+DATA.reports.length+' 份收录</span><p class="num">'+tdN+'</p><p class="lb">今天</p></div>'
+    +'<div class="stat">'+svgOf("pen")+'<p class="num">'+prog+'</p><p class="lb">进行中</p></div>'
+    +'<div class="stat">'+svgOf("tri")+'<span class="note">见问题库</span><p class="num">'+pitWait+'</p><p class="lb">待验证坑</p></div>'
+    +'<div class="stat">'+svgOf("box")+'<span class="note">含周/月报</span><p class="num">'+DATA.reports.length+'</p><p class="lb">已收录</p></div>';
+}
+function emptyBox(m){return '<div class="empty">'+m+'</div>'}
+var pitKey="all";
 function renderHome(){
   var rs=DATA.reports,flow=document.getElementById("repFlow");
   var td=rs.filter(function(r){return r.更大分组==="今天"});
-  document.getElementById("repSub").textContent=rs.length?("今天 "+td.length+" · 本周 "+rs.filter(function(r){return r.更大分组==="本周"}).length+" · 本月归档 "+rs.filter(function(r){return r.更大分组==="本月"}).length):"待 PM 汇编";
-  document.getElementById("repStats").innerHTML=rs.length?(
-    '<div class="stat p-mint"><b>'+td.length+'</b><small>今天</small></div>'+
-    '<div class="stat p-lav"><b>'+rs.filter(function(r){return r.状态==="进行中"}).length+'</b><small>进行中</small></div>'+
-    '<div class="stat p-sky"><b>'+rs.length+'</b><small>已收录</small></div>'+
-    '<div class="stat p-gray"><b>'+rs.filter(function(r){return r.状态==="已完成"}).length+'</b><small>已闭环</small></div>'):"";
-  var q=document.getElementById("qbox").value.trim();
-  var list=rs.filter(function(r){return !q||String(r.标题)+String(r.卡体摘要).indexOf(q)>=0});
-  flow.innerHTML=list.length?list.map(function(r){
-    return '<article class="card"><h3>'+escH(r.标题)+'</h3><p>'+escH(r.卡体摘要)+'</p>'+
-      '<div style="margin-top:8px;display:flex;align-items:center;gap:8px">'+
-      '<span class="pill '+(pillOfStatus[r.状态]||"p-gray")+'">'+escH(r.状态||"")+'</span><span class="pill p-gray">'+escH(r.日期标签||r.日期范围||"")+'</span></div>'+
-      '<div class="avatarline">'+(r.owner||[]).map(function(o){return '<i style="background:'+(AV[o]||"#888")+'">'+escH(o)+'</i>'}).join("")+'</div></article>';
-  }).join(""):emptyBox('没有匹配「'+escH(q)+'」的报告');
-  document.getElementById("sidehome").innerHTML=
-    '<div class="ptitle" style="font-size:34px">今日聚合 👀</div>'+
-    '<div class="statcol"><div class="stat p-sky"><b style="font-size:34px">'+td.length+'</b><small>今天报告</small></div>'+
-    '<div class="stat p-mint"><b style="font-size:34px">'+td.filter(function(r){return r.状态==="已完成"}).length+'</b><small>已闭环</small></div></div>'+
-    td.map(function(r){return '<div class="eventcard p-sky"><span class="eh">📄 '+escH(r.类型)+'报<small>今天</small></span><p>'+escH(r.卡体摘要)+'</p></div>'}).join("")+
-    ((td.length)?"":'<div class="eventcard p-but"><span class="eh">⏳ 今天的报告<small>待汇编</small></span><p>PM 更新 reports.json 后自动出现</p></div>');
-  if(!rs.length)flow.innerHTML=emptyBox('报告大厅还没有数据。<br>请把 <b>reports.json</b> 放在本页同目录（PM 汇编）');
+  document.getElementById("repSub").textContent=rs.length?("今天 "+td.length+" · 已收录 "+rs.length+" 份"):"待 PM 汇编";
+  if(rs.length){document.getElementById("repStats").style.display="grid";document.getElementById("repStats").innerHTML=statsHTML()}
+  flow.innerHTML=rs.length?rs.map(function(r){
+    return '<article class="task"><div style="display:flex;align-items:flex-start;gap:8px"><h3 style="flex:1">'+escH(r.标题)+'</h3>'
+      +'<span class="badge" style="'+bkStyle(r.状态)+'">'+escH(r.状态||"")+'</span></div>'
+      +'<p>'+escH(r.卡体摘要)+'</p>'
+      +'<div class="rowline"><span class="badge" style="background:#f4f4f9;color:#6e7091">'+escH(r.日期标签||r.日期范围||"")+'</span>'
+      +'<span class="meta">'+(r.owner||[]).map(function(o){return '<span class="dot" style="background:'+(ODOT[o]||"#8b5cf6")+'"></span>'+escH(o)}).join(" ")+'</span></div>'
+      +'<div class="acts"><span class="ab dark">》</span></div><p style="height:20px"></p></article>';
+  }).join(""):emptyBox('报告大厅还没有数据。<br>请把 <b>reports.json</b> 放在本页同目录（PM 汇编）');
+  document.getElementById("sideHome").innerHTML=
+    '<div class="h1line" style="font-size:13px;margin:0">今日聚合</div>'
+    +'<div class="statcol" style="grid-template-columns:1fr 1fr;margin-bottom:0">'
+    +'<div class="stat" style="padding:12px"><p class="num" style="font-size:17px;margin-top:0">'+td.length+'</p><p class="lb">已写报告</p></div>'
+    +'<div class="stat" style="padding:12px"><p class="num" style="font-size:17px;margin-top:0">'+td.filter(function(r){return r.状态==="已完成"}).length+'</p><p class="lb">已闭环</p></div></div>'
+    +(td.length?td.map(function(r){return '<div class="mini" style="background:#e9f0fb;border:1px solid #dce6f5"><span class="eh">'+escH(r.类型)+'报<small>今天</small></span><p>'+escH(r.卡体摘要)+'</p><span class="tp">⊙ '+escH(r.状态||"")+'</span></div>'}).join("")
+      :'<div class="mini" style="background:#fdf4e3;border:1px solid #f4e4c4"><span class="eh">今天的报告<small>待汇编</small></span><p>PM 更新 reports.json 后自动出现</p></div>');
 }
-
 function renderPits(){
-  var ps=DATA.pits,flow=document.getElementById("pitFlow");
-  var gufan=ps.filter(function(p){return p.状态标签==="惯犯"}).length,
-      done=ps.filter(function(p){return p.状态标签==="已固化"}).length,
-      wait=ps.filter(function(p){return p.状态标签==="待验证"}).length;
+  var ps=DATA.pits.slice();
   ps.sort(function(a,b){return b.次数-a.次数});
-  document.getElementById("pitSub").textContent=ps.length?(ps.length+" 案例 · 按出现次数排序 · 惯犯 "+gufan+" 已固化 "+done+" 待验证 "+wait):"待 PM 汇编";
-  var cur=document.querySelector("#pitChips .c.on");
-  var curKey=cur?cur.getAttribute("data-k"):"all";
-  var chips=[["all","全部 "+ps.length],["惯犯","惯犯 "+gufan,"warn"],["已固化","已固化 "+done],["待验证","待验证 "+wait]];
-  document.getElementById("pitChips").innerHTML=chips.map(function(c){return '<span class="c'+(c[0]==="惯犯"?" warn":"")+(c[0]===curKey?" on":"")+'" data-k="'+c[0]+'">'+c[1]+'</span>'}).join("");
-  document.querySelectorAll("#pitChips .c").forEach(function(c){
-    c.addEventListener("click",function(){document.querySelectorAll("#pitChips .c").forEach(function(x){x.classList.remove("on")});c.classList.add("on");renderPits()});
-  });
-  var q=document.getElementById("qbox").value.trim();
-  var list=ps.filter(function(p){return (curKey==="all"||p.状态标签===curKey)&&(!q||String(p.坑名)+String(p.根因)+String(p.修法).indexOf(q)>=0)});
-  document.getElementById("pitFlow").innerHTML=list.length?list.map(function(p){
-    return '<article class="card"><div style="display:flex;align-items:baseline;gap:8px"><h3>'+escH(p.坑名)+'</h3>'+
-      '<span class="pill '+pillOfStatus[p.状态标签]+'">'+escH(p.状态标签)+'</span></div>'+
-      '<p>'+(p.根因?("根因："+escH(p.根因)):"根因：待 PM 补全")+(p.修法?("<br>修法："+escH(p.修法)):"<br>修法：待 PM 补全")+'</p>'+
-      '<div style="margin-top:8px;display:flex;gap:8px"><span class="pill p-mint">'+escH(p.防复发条款||"防复发条款待补")+'</span><span class="pill p-gray">第 '+p.次数+' 次'+(p.末次?" · "+escH(p.末次):"")+'</span></div></article>';
-  }).join(""):emptyBox('没有匹配的坑案例');
-  document.getElementById("sidepits").innerHTML=
-    '<div class="ptitle" style="font-size:34px">三仓速览 🗂</div>'+
-    '<div class="eventcard p-mint"><span class="eh">✅ 已固化 '+done+' 条<small>进了纪律条款</small></span></div>'+
-    '<div class="eventcard p-rose"><span class="eh">🚫 惯犯 '+gufan+' 条<small>高发</small></span></div>'+
-    '<div class="eventcard p-but"><span class="eh">⏳ 待验证 '+wait+' 条<small>新案</small></span></div>';
-  if(!ps.length)document.getElementById("pitFlow").innerHTML=emptyBox('问题库还没有数据。<br>请把 <b>pitfalls.json</b> 放在本页同目录（PM 汇编 8 坑全收）');
+  var gufanN=ps.filter(function(p){return p.状态标签==="惯犯"}).length,
+      doneN=ps.filter(function(p){return p.状态标签==="已固化"}).length,
+      waitN=ps.filter(function(p){return p.状态标签==="待验证"}).length;
+  document.getElementById("pitSub").textContent=ps.length?(ps.length+" 案例 · 按出现次数排序 · 灰标=数据自动打"):"待 PM 汇编";
+  var chips=[["all","全部 "+ps.length],["惯犯","惯犯 "+gufanN],["已固化","已固化 "+doneN],["待验证","待验证 "+waitN]];
+  document.getElementById("pitChips").innerHTML=chips.map(function(c){
+    return '<span data-k="'+c[0]+'" class="'+(c[0]===pitKey?"on":(c[0]==="惯犯"?"warn":""))+'">'+c[1]+"</span>";}).join("");
+  document.querySelectorAll("#pitChips span").forEach(function(c){
+    c.addEventListener("click",function(){pitKey=c.getAttribute("data-k");renderPits()});});
+  var list=ps.filter(function(p){return pitKey==="all"||p.状态标签===pitKey});
+  document.getElementById("pitGrid").innerHTML=list.length?list.map(function(p){
+    return '<article class="pit"><span class="badge pos" style="'+bkStyle(p.状态标签)+'">'+escH(p.状态标签)+'</span>'
+      +"<h3>"+escH(p.坑名)+"</h3><p>"+(p.根因?escH(p.根因):"根因：待 PM 补全")+(p.修法?("<br>修法："+escH(p.修法)):"<br>修法：待 PM 补全")+"</p>"
+      +'<div class="pills"><span class="badge" style="'+bkStyle("已固化")+'">'+escH(p.防复发条款||"防复发条款待补")+'</span>'
+      +'<span class="badge" style="background:#f4f4f9;color:#6e7091">第 '+escH(p.次数)+' 次'+(p.末次?" · "+escH(p.末次):"")+'</span></div></article>';
+  }).join(""):emptyBox('没有匹配的坑案例<br>请把 <b>pitfalls.json</b> 放在本页同目录（PM 汇编 8 坑全收）');
+  document.getElementById("sidePits").innerHTML=
+    '<div class="h1line" style="font-size:13px;margin:0">三仓速览</div>'
+    +'<div class="mini" style="background:#e6f4e9;border:1px solid #d3ecd8"><span class="eh">已固化 '+doneN+' 条<small>进了纪律条款</small></span></div>'
+    +'<div class="mini" style="background:#fdeef0;border:1px solid #f5d4d9"><span class="eh">惯犯 '+gufanN+' 条<small>高发</small></span></div>'
+    +'<div class="mini" style="background:#fdf2e3;border:1px solid #f4e4c2"><span class="eh">待验证 '+waitN+' 条<small>新案</small></span></div>';
+  if(!ps.length){document.getElementById("pitChips").innerHTML="";document.getElementById("sidePits").innerHTML=""}
 }
-
 function renderActs(){
   var as=DATA.acts,flow=document.getElementById("actFlow");
+  document.getElementById("actSub").textContent=as.length?("已记模板 "+as.filter(function(a){return a.状态==="已固化"}).length+" · 待判 "+as.filter(function(a){return a.状态==="待判定"}).length):"待 PM 汇编";
   var saved=JSON.parse(localStorage.getItem("maoor-review-actions")||"{}");
-  document.getElementById("actSub").textContent="已记模板 "+as.filter(function(a){return a.状态==="已固化"}).length+" · 待判 "+as.filter(function(a){return a.状态==="待判定"}).length;
-  document.getElementById("actFlow").innerHTML=as.length?as.map(function(a){
+  flow.innerHTML=as.length?as.map(function(a){
     var ok=a.步骤数>=5&&a.累计次数>=3;
     var cur=saved[a.id]||(a.状态==="已固化"?"tmpl":"keep");
-    return '<article class="card"><span class="pill '+(ok?"p-mint":"p-gray")+'" style="position:absolute;right:14px;top:14px">'+(ok?"达标 ✓":"未达标")+'</span>'+
-      '<h3>'+escH(a.流程名)+'</h3><p>'+escH(a.步骤文本||"")+'（共 '+a.步骤数+' 步 · 出现 '+a.累计次数+' 次）</p>'+
-      '<div class="tri"><span data-a="tmpl" data-id="'+a.id+'" class="'+(cur==="tmpl"?"on":"")+(ok?"":" lock")+'">记成模板</span>'+
-      '<span data-a="keep" data-id="'+a.id+'" class="'+(cur==="keep"?"on":"")+((ok)?"":"")+'">保持现状</span></div>'+
-      '<div style="margin-top:26px"><span class="timepill">⊙ 两态里只有一种可选（选择仅本页留存）</span></div></article>';
+    return '<article class="task">'
+      +'<span class="badge" style="position:absolute;right:12px;top:12px;'+bkStyle(ok?"已完成":"待判定")+'">'+(ok?"达标 ✓":"未达标")+'</span>'
+      +"<h3>"+escH(a.流程名)+"</h3><p>"+escH(a.步骤文本||"")+("共 "+a.步骤数+" 步 · 出现 "+a.累计次数+" 次")+"</p>"
+      +'<div class="rowline" style="margin-top:6px"><span class="badge" style="background:#f4f4f9;color:#6e7091">'+"两态任选其一，选择仅本页留存</span></div>"
+      +'<div class="tri"><span data-a="tmpl" data-id="'+a.id+'" class="'+(cur==="tmpl"?"on":"")+(ok?"":" off")+'">记成模板</span>'
+      +'<span data-a="keep" data-id="'+a.id+'" class="'+(cur==="keep"?"on":"")+'">保持现状</span></div>'
+      +'<div style="margin-top:30px;height:4px"></div></article>';
   }).join(""):emptyBox('动作页还没有数据。<br>请把 <b>actions.json</b> 放在本页同目录');
-  document.querySelectorAll("#actFlow .tri span[data-a]").forEach(function(s){
-    s.addEventListener("click",function(){
-      if(s.classList.contains("lock"))return;
-      var id=s.getAttribute("data-id"),a=s.getAttribute("data-a");
+  document.querySelectorAll("#actFlow .tri span[data-a]").forEach(function(sp){
+    sp.addEventListener("click",function(){
+      if(sp.classList.contains("off"))return;
+      var id=sp.getAttribute("data-id"),a=sp.getAttribute("data-a");
       saved[id]=a;localStorage.setItem("maoor-review-actions",JSON.stringify(saved));
-      s.parentElement.querySelectorAll("span").forEach(function(x){x.classList.toggle("on",x===s)});
+      sp.parentElement.querySelectorAll("span").forEach(function(x){x.classList.toggle("on",x===sp)});
     });
   });
   var tpls=as.filter(function(a){return a.状态==="已固化"||((JSON.parse(localStorage.getItem("maoor-review-actions")||"{}"))[a.id]==="tmpl"&&a.步骤数>=5&&a.累计次数>=3)});
-  document.getElementById("sideacts").innerHTML=
-    '<div class="ptitle" style="font-size:34px">模板库 📋</div>'+
-    '<div class="statcol"><div class="stat p-mint"><b style="font-size:34px">'+tpls.length+'</b><small>已存模板</small></div></div>'+
-    tpls.map(function(a){return '<div class="eventcard p-mint"><span class="eh">🧩 '+escH(a.流程名)+'<small>点开即用</small></span><p>'+escH(a.步骤文本||"")+'</p></div>'}).join("")+
-    '<div class="eventcard p-sky"><span class="eh">📋 记法说明</span><p>模板只锁「步骤和顺序」，参数栏留空现填；问题库标签由数据自动打。</p></div>';
-  if(!as.length)document.getElementById("actFlow").innerHTML=emptyBox('动作页还没有数据。<br>请把 <b>actions.json</b> 放在本页同目录');
+  document.getElementById("sideActs").innerHTML=
+    '<div class="h1line" style="font-size:13px;margin:0">模板库</div>'
+    +'<div class="statcol" style="grid-template-columns:1fr 1fr;margin-bottom:0">'
+    +'<div class="stat" style="padding:12px"><p class="num" style="font-size:17px;margin-top:0">'+tpls.length+'</p><p class="lb">已存模板</p></div>'
+    +'<div class="stat" style="padding:12px"><p class="num" style="font-size:17px;margin-top:0">'+(tpls.length?"~35":"0")+'</p><p class="lb">分钟/周省下</p></div></div>'
+    +tpls.map(function(a){return '<div class="mini" style="background:#e6f4e9;border:1px solid #d3ecd8"><span class="eh">'+escH(a.流程名)+'<small>点开即用</small></span><p>'+escH(a.步骤文本||"")+'</p></div>'}).join("")
+    +'<div class="mini" style="background:#e9f0fb;border:1px solid #dce6f6"><span class="eh">记法说明</span><p>模板只锁「步骤和顺序」，参数栏留空每次现填；问题库标签由数据自动打。</p></div>';
 }
-
 function renderEmpty(){
-  ["repFlow","pitFlow","actFlow"].forEach(function(id){document.getElementById(id).innerHTML=
+  ["repFlow","pitGrid","actFlow"].forEach(function(id){document.getElementById(id).innerHTML=
     emptyBox("数据加载失败。<br>请确认本页同目录有 <b>reports.json / pitfalls.json / actions.json</b>（或同级 .json.js 兜底），且未断网。")});
-  ["repStats"].forEach(function(id){document.getElementById(id).innerHTML=""});
   ["repSub","pitSub","actSub"].forEach(function(id){document.getElementById(id).textContent="数据未加载"});
 }
 
 </script>
+</main>
 </body>
 </html>
