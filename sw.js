@@ -12,7 +12,7 @@
  *  配套动作：deploy 脚本的 commit message 里也带上新的缓存名，便于回溯。
  * ==========================================================================*/
 
-const CACHE = "lingjing-v6";
+const CACHE = "lingjing-v7";
 const OFFLINE_URL = "./index.html";
 
 /* 预缓存清单：必须离线可用的最小集合
