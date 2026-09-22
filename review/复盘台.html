@@ -142,7 +142,9 @@ if(/^#p[12]$/.test(location.hash)||/^#p3$/.test(location.hash)){
 }
 var BK={"已完成":{b:"#e6f4e9",t:"#2f7a3d"},"进行中":{b:"#f1e8fb",t:"#7c4fe0"},"已归档":{b:"#e6f4e9",t:"#2f7a3d"},
   "待验证":{b:"#fdf2e3",t:"#b06d16"},"待判定":{b:"#f4f4f9",t:"#6e7091"},"惯犯":{b:"#fdeef0",t:"#e0485c"},
-  "已固化":{b:"#e6f4e9",t:"#2f7a3d"},"建议模板":{b:"#fdf2e3",t:"#b06d16"}};
+  "已固化":{b:"#e6f4e9",t:"#2f7a3d"},"建议模板":{b:"#fdf2e3",t:"#b06d16"},
+  "未开":{b:"#fdeef0",t:"#e0485c"},"已闭环":{b:"#e6f4e9",t:"#2f7a3d"}, /* E-20260922-01 行动状态三态 */
+  "断言":{b:"#e6f4e9",t:"#2f7a3d"},"检查点":{b:"#eef1fb",t:"#3b62a8"},"工具化待做":{b:"#fdeef0",t:"#e0485c"},"建议断言化":{b:"#fdf2e3",t:"#b06d16"}}; /* E-20260922-01 拦截四态 */
 function bkStyle(s){var c=BK[s]||{b:"#f4f4f9",t:"#6e7091"};return "background:"+c.b+";color:"+c.t}
 var ODOT={"统":"#e5b83c","设":"#9a6bd1","工":"#4fae7c"};
 function svgOf(k){
@@ -188,27 +190,48 @@ function renderHome(){
 }
 function renderPits(){
   var ps=DATA.pits.slice();
+  var notDone=function(p){return p.状态标签==="惯犯"&&(p.行动状态||"未开")!=="已闭环";};
   ps.sort(function(a,b){return b.次数-a.次数});
   var gufanN=ps.filter(function(p){return p.状态标签==="惯犯"}).length,
+      gufanOpen=ps.filter(notDone).length,
       doneN=ps.filter(function(p){return p.状态标签==="已固化"}).length,
       waitN=ps.filter(function(p){return p.状态标签==="待验证"}).length;
   document.getElementById("pitSub").textContent=ps.length?(ps.length+" 案例 · 按出现次数排序 · 灰标=数据自动打"):"待 PM 汇编";
-  var chips=[["all","全部 "+ps.length],["惯犯","惯犯 "+gufanN],["已固化","已固化 "+doneN],["待验证","待验证 "+waitN]];
+  var chips=[["all","全部 "+ps.length],["惯犯","惯犯 "+gufanN+(gufanOpen?" · "+gufanOpen+" 未闭环":"")],["已固化","已固化 "+doneN],["待验证","待验证 "+waitN]];
   document.getElementById("pitChips").innerHTML=chips.map(function(c){
-    return '<span data-k="'+c[0]+'" class="'+(c[0]===pitKey?"on":(c[0]==="惯犯"?"warn":""))+'">'+c[1]+"</span>";}).join("");
+    var warn=(c[0]==="惯犯"&&gufanOpen)?' style="color:#e0485c;font-weight:800"':"";
+    return '<span data-k="'+c[0]+'" class="'+(c[0]===pitKey?"on":(c[0]==="惯犯"?"warn":""))+'"'+(c[0]===pitKey?"":warn)+'>'+c[1]+"</span>";}).join("");
   document.querySelectorAll("#pitChips span").forEach(function(c){
     c.addEventListener("click",function(){pitKey=c.getAttribute("data-k");renderPits()});});
   var list=ps.filter(function(p){return pitKey==="all"||p.状态标签===pitKey});
+  if(pitKey==="惯犯")list.sort(function(a,b){ /* 惯犯 chip：未闭环优先，其次次数 */
+    var ao=notDone(a)?0:1,bo=notDone(b)?0:1;
+    return ao!==bo?ao-bo:(b.次数-a.次数);});
   document.getElementById("pitGrid").innerHTML=list.length?list.map(function(p){
-    return '<article class="pit"><span class="badge pos" style="'+bkStyle(p.状态标签)+'">'+escH(p.状态标签)+'</span>'
+    var gufanOpen=notDone(p);
+    var st=(p.行动状态||"");
+    var stShow=st||(p.状态标签==="已固化"?"已闭环":"未开"); /* 兜底：已固化件默认闭环，其余默认未开 */
+    var next=p.下一步动作,who=p.负责人||"—";
+    var rx=(p.拦截方式||"");
+    var rxKey=rx.indexOf("断言已进")===0||rx.indexOf("断言")===0?"断言":(rx.indexOf("人工检查点")===0?"检查点":(rx.indexOf("工具化")===0?"工具化待做":(rx.indexOf("建议断言")===0?"建议断言化":"")));
+    return '<article class="pit"'+(gufanOpen?' style="border:2px solid #e0485c;position:relative"':'')+'>'
+      +(gufanOpen?'<span class="badge" style="position:absolute;right:10px;top:-10px;background:#e0485c;color:#fff">第 '+escH(p.次数)+' 次 · 未闭环</span>':'')
+      +'<span class="badge pos" style="'+bkStyle(p.状态标签)+'">'+escH(p.状态标签)+'</span>'
       +"<h3>"+escH(p.坑名)+"</h3><p>"+(p.根因?escH(p.根因):"根因：待 PM 补全")+(p.修法?("<br>修法："+escH(p.修法)):"<br>修法：待 PM 补全")+"</p>"
       +'<div class="pills"><span class="badge" style="'+bkStyle("已固化")+'">'+escH(p.防复发条款||"防复发条款待补")+'</span>'
-      +'<span class="badge" style="background:#f4f4f9;color:#6e7091">第 '+escH(p.次数)+' 次'+(p.末次?" · "+escH(p.末次):"")+'</span></div></article>';
+      +'<span class="badge" style="background:#f4f4f9;color:#6e7091">第 '+escH(p.次数)+' 次'+(p.末次?" · "+escH(p.末次):"")+'</span></div>'
+      +'<div class="pills" style="margin-top:8px;background:#f0f7f2;border:1px solid #cfe8d6;border-radius:8px;padding:6px 8px">'
+      +(next?('<b style="color:#2f7a3d">▶ 下一步：</b>'+escH(next)+'　·　'+escH(who)+'　<span class="badge" style="'+bkStyle(stShow)+'">'+escH(stShow)+'</span>')
+            :'<span style="color:#b06d16">处方待 PM 补</span>')
+      +(rxKey?('<span class="badge" style="'+bkStyle(rxKey)+';margin-left:6px">拦截·'+escH(rxKey)+'</span>'):"")
+      +'</div>'
+      +(p.关联文件?('<div style="margin-top:6px;font:11px/1.5 Consolas,monospace;color:#8a8798">关联：'+escH(p.关联文件)+'</div>'):"")
+      +'</article>';
   }).join(""):emptyBox('没有匹配的坑案例<br>请把 <b>pitfalls.json</b> 放在本页同目录（PM 汇编 8 坑全收）');
   document.getElementById("sidePits").innerHTML=
     '<div class="h1line" style="font-size:13px;margin:0">三仓速览</div>'
     +'<div class="mini" style="background:#e6f4e9;border:1px solid #d3ecd8"><span class="eh">已固化 '+doneN+' 条<small>进了纪律条款</small></span></div>'
-    +'<div class="mini" style="background:#fdeef0;border:1px solid #f5d4d9"><span class="eh">惯犯 '+gufanN+' 条<small>高发</small></span></div>'
+    +'<div class="mini" style="background:#fdeef0;border:1px solid #f5d4d9"><span class="eh">惯犯 '+gufanN+' 条'+(gufanOpen?' · <b style="color:#e0485c">'+gufanOpen+' 条未闭环</b>':'')+'<small>高发</small></span></div>'
     +'<div class="mini" style="background:#fdf2e3;border:1px solid #f4e4c2"><span class="eh">待验证 '+waitN+' 条<small>新案</small></span></div>';
   if(!ps.length){document.getElementById("pitChips").innerHTML="";document.getElementById("sidePits").innerHTML=""}
 }
@@ -236,11 +259,12 @@ function renderActs(){
     });
   });
   var tpls=as.filter(function(a){return a.状态==="已固化"||((JSON.parse(localStorage.getItem("maoor-review-actions")||"{}"))[a.id]==="tmpl"&&a.步骤数>=5&&a.累计次数>=3)});
+  var saveMin=tpls.reduce(function(s,a){return s+((typeof a.每次省分==="number")?a.每次省分*(a.累计次数||0):0);},0); /* E-20260922-01 真算：Σ(每次省分×累计次数)，无数值字段不计 */
   document.getElementById("sideActs").innerHTML=
     '<div class="h1line" style="font-size:13px;margin:0">模板库</div>'
     +'<div class="statcol" style="grid-template-columns:1fr 1fr;margin-bottom:0">'
     +'<div class="stat" style="padding:12px"><p class="num" style="font-size:17px;margin-top:0">'+tpls.length+'</p><p class="lb">已存模板</p></div>'
-    +'<div class="stat" style="padding:12px"><p class="num" style="font-size:17px;margin-top:0">'+(tpls.length?"~35":"0")+'</p><p class="lb">分钟/周省下</p></div></div>'
+    +'<div class="stat" style="padding:12px"><p class="num" style="font-size:17px;margin-top:0">'+saveMin+'</p><p class="lb">累计约省（分钟）</p></div></div>'
     +tpls.map(function(a){return '<div class="mini" style="background:#e6f4e9;border:1px solid #d3ecd8"><span class="eh">'+escH(a.流程名)+'<small>点开即用</small></span><p>'+escH(a.步骤文本||"")+'</p></div>'}).join("")
     +'<div class="mini" style="background:#e9f0fb;border:1px solid #dce6f6"><span class="eh">记法说明</span><p>模板只锁「步骤和顺序」，参数栏留空每次现填；问题库标签由数据自动打。</p></div>';
 }
